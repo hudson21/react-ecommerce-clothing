@@ -32,6 +32,7 @@ class App extends Component {
       if (userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
         
+        // This code will be triggered each time there is a change in our user document snapshot
         userRef.onSnapshot(snapshot => {
           setCurrentUser({
             id: snapshot.id,
