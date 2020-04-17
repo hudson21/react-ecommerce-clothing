@@ -6,6 +6,9 @@ import './App.css';
 // Redux
 import { connect } from 'react-redux';
 
+// Actions
+import { checkUserSession } from './redux/user/user.actions';
+
 // Selectors
 import { selectCurrentUser } from './redux/user/user.selectors';
 import { createStructuredSelector } from 'reselect';
@@ -22,28 +25,8 @@ class App extends Component {
   unSubscribeFromAuth = null;
 
   componentDidMount() {
-
-    // this.unSubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-    //   if (userAuth) {
-    //     const userRef = await createUserProfileDocument(userAuth);
-        
-    //     // This code will be triggered each time there is a change in our user document snapshot
-    //     userRef.onSnapshot(snapshot => {
-    //       setCurrentUser({
-    //         id: snapshot.id,
-    //         ...snapshot.data()
-    //       });
-    //     });
-
-    //   } else {
-    //     setCurrentUser(userAuth);
-    //   }
-    // })
-  }
-
-  // Closing the Subscription to the firebase auth method
-  componentWillUnmount() {
-    this.unSubscribeFromAuth();
+    const { checkUserSession } = this.props;
+    checkUserSession();
   }
 
   render() {
@@ -64,7 +47,10 @@ class App extends Component {
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
-})
+});
 
+const mapDispatchToProps = (dispatch) => ({
+  checkUserSession: () => dispatch(checkUserSession()),
+});
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
