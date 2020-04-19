@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 import './App.css';
@@ -20,29 +20,23 @@ import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import CheckoutPage from './pages/checkout/checkout.component';
 
-class App extends Component {
-
-  unSubscribeFromAuth = null;
-
-  componentDidMount() {
-    const { checkUserSession } = this.props;
+const App = ({ currentUser, checkUserSession }) => {
+  // checkUserSession is an action that will not change, so basically it will not be updated apart from componentDidMount (in this chase useEffects)
+  useEffect(() => {
     checkUserSession();
-  }
-
-  render() {
-    const { currentUser } = this.props
-    return (
-      <div>
-        <Header />
-        <Switch>
-          <Route exact path="/" component={HomePage} />
-          <Route path="/shop" component={ShopPage} />
-          <Route exact path="/checkout" component={CheckoutPage} />
-          <Route exact path="/signin" render={() => currentUser ? (<Redirect to='/' />) : (<SignInAndSignUpPage />)} />
-        </Switch>
-      </div>
-    );
-  }
+  }, [checkUserSession]);
+  
+  return (
+    <div>
+      <Header />
+      <Switch>
+        <Route exact path="/" component={HomePage} />
+        <Route path="/shop" component={ShopPage} />
+        <Route exact path="/checkout" component={CheckoutPage} />
+        <Route exact path="/signin" render={() => currentUser ? (<Redirect to='/' />) : (<SignInAndSignUpPage />)} />
+      </Switch>
+    </div>
+  );
 }
 
 const mapStateToProps = createStructuredSelector({
